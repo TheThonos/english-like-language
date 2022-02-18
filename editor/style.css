@@ -1,0 +1,211 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  font-family: "Consolas", monospace;
+  font-weight: normal;
+  letter-spacing: 2px;
+  line-height: 1.8;
+  background: #6c6cf4;
+  color: #fff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  clear: both;
+}
+
+hr {
+  background-color: #ccc;
+  border: 0;
+  height: 1px;
+  margin-bottom: 1.5em;
+}
+
+/* Text elements */
+p {
+  margin-bottom: 1.5em;
+}
+
+ul,
+ol {
+  margin: 0 0 1.5em 3em;
+}
+
+ul {
+  list-style: disc;
+}
+
+ol {
+  list-style: decimal;
+}
+
+ul ul,
+ol ol,
+ul ol,
+ol ul {
+  margin-bottom: 0;
+  margin-left: 1.5em;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin: 0 1.5em 1.5em;
+}
+
+b,
+strong {
+  font-weight: bold;
+}
+
+dfn,
+cite,
+em,
+i {
+  font-style: italic;
+}
+
+blockquote {
+  margin: 0 1.5em;
+}
+
+address {
+  margin: 0 0 1.5em;
+}
+
+abbr,
+acronym {
+  border-bottom: 1px dotted #666;
+  cursor: help;
+}
+
+mark,
+ins {
+  background: #fff9c0;
+  text-decoration: none;
+}
+
+sup,
+sub {
+  font-size: 75%;
+  height: 0;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  bottom: 1ex;
+}
+
+sub {
+  top: 0.5ex;
+}
+
+small {
+  font-size: 75%;
+}
+
+big {
+  font-size: 125%;
+}
+
+figure {
+  margin: 0;
+}
+
+table {
+  margin: 0 0 1.5em;
+  width: 100%;
+}
+
+th {
+  font-weight: bold;
+}
+
+#editor {
+  display: block;
+  padding: 0.8rem;
+  margin: 3rem auto;
+  width: 100%;
+  height: calc(50vh - 5rem);
+  resize: none;
+  background: #5555d8;
+  color: #fff;
+  border: 1px solid #6c6cf4;
+  transition: all 500ms ease;
+}
+
+#editor:focus {
+  background: #5757d7;
+  color: #fff;
+  border: 1px solid #5757d7;
+  outline: none;
+  transition: all 500ms ease;
+}
+
+#editor::selection {
+  color: gold;
+  background: red;
+}
+
+button {
+  padding: 0.5rem 0.8rem;
+  margin: 0 auto;
+  text-align: center;
+  border: 1px solid #fff;
+  background: #5555d8;
+  color: #fff;
+  transition: all 500ms ease;
+}
+
+button:hover,
+button:focus {
+  cursor: pointer;
+  border: 1px solid #5555d8;
+  background: #fff;
+  color: #5555d8;
+  transition: all 500ms ease;
+}
+
+.app {
+  text-align: center;
+  margin: 3rem auto;
+  width: 100%;
+  max-width: 40rem;
+  height: 20rem;
+}
+
+#console {
+  display: block;
+  padding: 0.8rem;
+  margin: 3rem auto;
+  width: 100%;
+  height: calc(50vh - 5rem);
+  resize: none;
+  background: #5555d8;
+  color: #fff;
+  border: 1px solid #6c6cf4;
+  transition: all 500ms ease;
+}
+textarea {
+	/* position: absolute;
+	opacity: 0; */
+}

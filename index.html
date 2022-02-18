@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Examples</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+		<h1>Hello World:</h1>
+		<h4>Code:</h4>
+    <div code><span keyword>say</span> <span string>"Hello World"</span></div>
+		<h4>Result:</h4>
+		<div code>Hello World</div>
+		<br/>
+		<h1>Echo:</h1>
+		<h4>Code:</h4>
+		<div code>
+			<span keyword>read</span> <span string>"Say something"</span> <span keyword>as</span> <span variable>input</span><br/>
+			<span keyword>say</span> <span variable>input</span>
+		</div>
+		<h4>Result:</h4>
+		<div code>
+			Say something > 
+			<input id="echoinput" autocomplete="off"/>
+		</div>
+		<br/>
+		<h1>Math:</h1>
+		<h4>Code:</h4>
+		<div code>
+			<span keyword>read</span> <span string>"Gimme a number"</span> <span keyword>as</span> <span variable>firstNum</span><br/>
+			<span keyword>read</span> <span string>"Gimme another number"</span> <span keyword>as</span> <span variable>secondNum</span><br/>
+			<span keyword>set</span> <span variable>result</span> <span keyword>to</span> <span variable>firstNum</span> <span operator>+</span> <span variable>secondNum</span><br/>
+			<span keyword>say</span> <span variable>result</span>
+		</div>
+		<h4>Result:</h4>
+		<div code>
+			Gimme a number > 
+			<input id="mathinput" autocomplete="off"/>
+		</div>
+		<br/>
+		<button onclick="location.href = '/editor'">Go To Editor</button>
+    <script src="script.js"></script>
+  </body>
+</html>

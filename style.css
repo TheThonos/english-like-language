@@ -1,0 +1,43 @@
+html {
+	font-family: Arial;
+}
+body {
+	margin: 0;
+	margin-left: max(5%, calc(50vw - 400px));
+	margin-right: max(5%, calc(50vw - 400px));
+	margin-bottom: 5%;
+}
+div[code] {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #EEE;
+	font-family: monospace;
+}
+span[keyword] {
+	color: blue;
+}
+span[string] {
+	color: rgb(200, 100, 10);
+}
+span[variable] {
+	color: black;
+}
+span[operator] {
+	color: green;
+}
+div[code] input {
+	font-family: monospace;
+	border: none;
+	outline: none;
+	background-color: #DDD;
+}
+button {
+	width: 100%;
+	color: white;
+	background-color: #0f9f0f;
+	border: none;
+	outline: none;
+	padding: 10px;
+	border-radius: 10px;
+	cursor: pointer;
+}
