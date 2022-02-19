@@ -60,8 +60,8 @@ function highlight(element){
 			// 	if(p2 != null) return match;
 			// });
 			let vars = html[i].replace(new RegExp(`{[a-zA-Z0-9]*}`), match => {
-				return match;
-			})
+				return `<span class='variable'>${match}</span>`;
+			});
 			console.log(vars);
     }
   }
