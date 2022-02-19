@@ -116,9 +116,7 @@ pre[class*="language-"] {
 }
 
 code[class*="language-"] {
-  background: #1c2333;
   color: white;
-  box-shadow: -.3em 0 0 .3em #1c2333, .3em 0 0 .3em #1c2333;
 }
 
 :not(pre) > code[class*="language-"] {
@@ -166,7 +164,7 @@ code[class*="language-"] {
 .language-css .string,
 .variable,
 .inserted {
-  color: yellowgreen;
+  color: white;
 }
 
 .atrule,
@@ -194,6 +192,10 @@ code[class*="language-"] {
 
 .deleted {
   color: red;
+}
+
+.declaration {
+  color: #867be7;
 }
 
 pre.diff-highlight.diff-highlight > code .deleted:not(.prefix),

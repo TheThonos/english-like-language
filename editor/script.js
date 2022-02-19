@@ -41,6 +41,12 @@ const syntax = {
     "set",
     "as",
     "to"
+  ],
+  declaration: [
+    "for",
+    "if",
+    "function",
+    "with"
   ]
 }
 
@@ -55,14 +61,12 @@ function highlight(element){
         }
       }
     } else { // Means it is a string
-      html[i] = `<span class='string'>${html[i]}</span>`;
+      html[i] = `<span class='string'>${html[i]}</span>`.replace(new RegExp(`{[a-zA-Z0-9]*}`), match => {
+				return `<span class='variable'>${match}</span>`;
+			});
 			// let vars = html[i].replace(new RegExp(`{[^}]*}|([a-zA-Z0-9]*)`, 'g'), (match, p1, p2) => {
 			// 	if(p2 != null) return match;
 			// });
-			let vars = html[i].replace(new RegExp(`{[a-zA-Z0-9]*}`), match => {
-				return `<span class='variable'>${match}</span>`;
-			});
-			console.log(vars);
     }
   }
   html = html.join('"');
