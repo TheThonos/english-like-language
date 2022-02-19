@@ -1,211 +1,210 @@
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  position: relative;
-  height: 100%;
-}
+/* Please see the article */
 
 body {
   margin: 0;
-  padding: 0;
-  font-size: 12px;
-  font-family: "Consolas", monospace;
-  font-weight: normal;
-  letter-spacing: 2px;
-  line-height: 1.8;
-  background: #6c6cf4;
-  color: #fff;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  clear: both;
-}
-
-hr {
-  background-color: #ccc;
+#editing, #highlighting {
+  /* Both elements need the same text and space styling so they are directly on top of each other */
+  margin: 0;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
   border: 0;
-  height: 1px;
-  margin-bottom: 1.5em;
+  width: 100vw;
+  height: calc(50% - 25px);
+}
+#editing, #highlighting, #highlighting * {
+  /* Also add text styles to highlighing tokens */
+  font-size: 15pt;
+  font-family: monospace;
+  line-height: 20pt;
+  tab-size: 2;
 }
 
-/* Text elements */
-p {
-  margin-bottom: 1.5em;
+
+#editing, #highlighting {
+  /* In the same place */
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-ul,
-ol {
-  margin: 0 0 1.5em 3em;
+
+/* Move the textarea in front of the result */
+
+#editing {
+  z-index: 1;
+  outline: none;
+}
+#highlighting {
+  z-index: 0;
+  background: #1c2333;
 }
 
-ul {
-  list-style: disc;
+
+/* Make textarea almost completely transparent */
+
+#editing {
+  color: transparent;
+  background: transparent;
+  caret-color: white; /* Or choose your favourite color */
 }
 
-ol {
-  list-style: decimal;
+/* Can be scrolled */
+#editing, #highlighting {
+  overflow: auto;
+  white-space: nowrap; /* Allows textarea to scroll horizontally */
 }
 
-ul ul,
-ol ol,
-ul ol,
-ol ul {
-  margin-bottom: 0;
-  margin-left: 1.5em;
+/* No resize on textarea */
+#editing {
+  resize: none;
 }
 
-dt {
+/* Paragraphs; First Image */
+* {
+  font-family: "Fira Code", monospace;
+}
+p code {
+  border-radius: 2px;
+  background-color: #eee;
+  color: #1c2333;
+}
+
+
+/* Syntax Highlighting from prism.js starts below, partly modified: */
+
+/* PrismJS 1.23.0
+https://prismjs.com/download.html#themes=prism-funky&languages=markup */
+/**
+ * prism.js Funky theme
+ * Based on “Polyfilling the gaps” talk slides http://lea.verou.me/polyfilling-the-gaps/
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 1em;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  color: white;
+}
+
+/* Code blocks */
+
+pre[class*="language-"] {
+  padding: .4em .8em;
+  margin: .5em 0;
+  overflow: auto;
+  background: #1c2333;
+}
+
+code[class*="language-"] {
+  background: #1c2333;
+  color: white;
+  box-shadow: -.3em 0 0 .3em #1c2333, .3em 0 0 .3em #1c2333;
+}
+
+:not(pre) > code[class*="language-"] {
+  padding: .2em;
+  border-radius: .3em;
+  box-shadow: none;
+  white-space: normal;
+}
+
+.comment,
+.prolog,
+.doctype,
+.cdata {
+  color: #aaa;
+}
+
+.punctuation {
+  color: #999;
+}
+
+.namespace {
+  opacity: .7;
+}
+
+.property,
+.tag,
+.boolean,
+.number,
+.constant,
+.symbol {
+  color: #f2e088;
+}
+
+.selector,
+.attr-name,
+.string,
+.char,
+.builtin {
+  color: yellow;
+}
+
+.operator,
+.entity,
+.url,
+.language-css .string,
+.variable,
+.inserted {
+  color: yellowgreen;
+}
+
+.atrule,
+.attr-value,
+.keyword {
+  color: #57abfb
+}
+
+.regex,
+.important {
+  color: orange;
+}
+
+.important,
+.bold {
   font-weight: bold;
 }
-
-dd {
-  margin: 0 1.5em 1.5em;
-}
-
-b,
-strong {
-  font-weight: bold;
-}
-
-dfn,
-cite,
-em,
-i {
+.italic {
   font-style: italic;
 }
 
-blockquote {
-  margin: 0 1.5em;
-}
-
-address {
-  margin: 0 0 1.5em;
-}
-
-abbr,
-acronym {
-  border-bottom: 1px dotted #666;
+.entity {
   cursor: help;
 }
 
-mark,
-ins {
-  background: #fff9c0;
-  text-decoration: none;
+.deleted {
+  color: red;
 }
 
-sup,
-sub {
-  font-size: 75%;
-  height: 0;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
+pre.diff-highlight.diff-highlight > code .deleted:not(.prefix),
+pre > code.diff-highlight.diff-highlight .deleted:not(.prefix) {
+  background-color: rgba(255, 0, 0, .3);
+  display: inline;
 }
 
-sup {
-  bottom: 1ex;
+pre.diff-highlight.diff-highlight > code .inserted:not(.prefix),
+pre > code.diff-highlight.diff-highlight .inserted:not(.prefix) {
+  background-color: rgba(0, 255, 128, .3);
+  display: inline;
 }
 
-sub {
-  top: 0.5ex;
-}
-
-small {
-  font-size: 75%;
-}
-
-big {
-  font-size: 125%;
-}
-
-figure {
-  margin: 0;
-}
-
-table {
-  margin: 0 0 1.5em;
-  width: 100%;
-}
-
-th {
-  font-weight: bold;
-}
-
-#editor {
-  display: block;
-  padding: 0.8rem;
-  margin: 3rem auto;
-  width: 100%;
-  height: calc(50vh - 5rem);
-  resize: none;
-  background: #5555d8;
-  color: #fff;
-  border: 1px solid #6c6cf4;
-  transition: all 500ms ease;
-}
-
-#editor:focus {
-  background: #5757d7;
-  color: #fff;
-  border: 1px solid #5757d7;
-  outline: none;
-  transition: all 500ms ease;
-}
-
-#editor::selection {
-  color: gold;
-  background: red;
-}
-
-button {
-  padding: 0.5rem 0.8rem;
-  margin: 0 auto;
-  text-align: center;
-  border: 1px solid #fff;
-  background: #5555d8;
-  color: #fff;
-  transition: all 500ms ease;
-}
-
-button:hover,
-button:focus {
-  cursor: pointer;
-  border: 1px solid #5555d8;
-  background: #fff;
-  color: #5555d8;
-  transition: all 500ms ease;
-}
-
-.app {
-  text-align: center;
-  margin: 3rem auto;
-  width: 100%;
-  max-width: 40rem;
-  height: 20rem;
-}
-
-#console {
-  display: block;
-  padding: 0.8rem;
-  margin: 3rem auto;
-  width: 100%;
-  height: calc(50vh - 5rem);
-  resize: none;
-  background: #5555d8;
-  color: #fff;
-  border: 1px solid #6c6cf4;
-  transition: all 500ms ease;
-}
-textarea {
-	/* position: absolute;
-	opacity: 0; */
-}
+/* End of prism.js syntax highlighting*/

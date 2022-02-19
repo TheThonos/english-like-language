@@ -10,8 +10,13 @@
 <body>
 	<main class="app">
 		<div id="editor-control"></div>
-		<textarea id="editorTextarea" spellcheck="false"></textarea>
-		<div id="editor" onclick="document.getElementById('editorTextarea').focus()"></div>
+		<div>
+			<textarea id="editing" spellcheck="false" oninput="update(this.value); sync_scroll(this);" onscroll="sync_scroll(this);" onkeydown="check_tab(this, event);"></textarea>
+			<pre id="highlighting" aria-hidden="true">
+			<code class="language-html" id="highlighting-content">
+			</code>
+			</pre>
+		</div>
 		<div id="console"></div>
 	</main>
 	<script src="script.js"></script>

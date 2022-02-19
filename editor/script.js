@@ -1,416 +1,75 @@
-class Editor {
-  constructor(source) {
-    this.history = [];
-    this.undo = 0;
-    this.redo = null;
-
-    this.def = (x) => typeof x !== "undefined";
-    this.log = (c) => (this.def(c) ? console.log(c) : 0);
-    this.area = source;
-
-    history[this.undo] = {
-      value: this.area.value,
-      selectionStart: 0,
-      selectionEnd: 0
-    };
-
-    this.undo++;
+function update(text) {
+  let result_element = document.querySelector("#highlighting-content");
+  // Handle final newlines (see article)
+  if(text[text.length-1] == "\n") {
+    text += " ";
   }
+  // Update code
+  result_element.innerHTML = text.replace(new RegExp("&", "g"), "&amp;").replace(new RegExp("<", "g"), "&lt;").replace(new RegExp(" ", "g"), "&nbsp;"); /* Global RegExp */
+  // Syntax Highlight
+  highlight(result_element);
+}
 
-	/**
-	 * Collect data from selected text inside a textarea
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   elem.onmouseup = function() {
-	 *       alert(editor.selection().start);
-	 *       alert(editor.selection().end);
-	 *       alert(editor.selection().value);
-	 *   };
-	 * </code>
-	 *
-	 */
-  selection() {
-    let start = this.area.selectionStart,
-      end = this.area.selectionEnd,
-      value = this.area.value.substring(start, end),
-      before = this.area.value.substring(0, start),
-      after = this.area.value.substring(end),
-      data = {
-        start: start,
-        end: end,
-        value: value,
-        before: before,
-        after: after
-      };
-    //this.log(data);
-    return data;
-  }
+function sync_scroll(element) {
+  /* Scroll result to scroll coords of event - sync with textarea */
+  let result_element = document.querySelector("#highlighting");
+  // Get and set x and y
+  result_element.scrollTop = element.scrollTop;
+  result_element.scrollLeft = element.scrollLeft;
+}
 
-	/**
-	 * Select portion of text inside a textarea
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.select(7, 11);
-	 * </code>
-	 *
-	 */
-  select(start, end, callback) {
-    this.area.focus();
-    this.area.setSelectionRange(start, end);
-    if (typeof callback == "function") callback();
-  }
-
-	/**
-	 * Replace portion of selected text inside a textarea with something
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.replace(/foo/, "bar");
-	 * </code>
-	 *
-	 */
-  replace(from, to, callback) {
-    let sel = this.selection(),
-      start = sel.start,
-      end = sel.end,
-      selections = sel.value.replace(from, to);
-    this.area.value = sel.before + selections + sel.after;
-    this.select(start, start + selections.length);
-    if (typeof callback == "function") {
-      callback();
-    } else {
-      this.updateHistory({
-        value: this.area.value,
-        selectionStart: start,
-        selectionEnd: start + selections.length
-      });
-    }
-  }
-
-	/**
-	 * Replace selected text inside a textarea with something
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.insert('foo');
-	 * </code>
-	 *
-	 */
-  insert(insertion, callback) {
-    let sel = this.selection(),
-      start = sel.start,
-      end = sel.end;
-
-    this.area.value = sel.before + insertion + sel.after;
-    this.select(start + insertion.length, start + insertion.length);
-
-    if (typeof callback == "function") {
-      callback();
-    } else {
-      this.updateHistory({
-        value: this.area.value,
-        selectionStart: start + insertion.length,
-        selectionEnd: start + insertion.length
-      });
-    }
-  }
-
-	/**
-	 * Wrap selected text inside a textarea with something
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.wrap('<strong>', '</strong>');
-	 * </code>
-	 *
-	 */
-  wrap(open, close, callback) {
-    let sel = this.selection(),
-      selections = sel.value,
-      before = sel.before,
-      after = sel.after;
-
-    this.area.value = before + open + selections + close + after;
-    this.select(
-      before.length + open.length,
-      before.length + open.length + selections.length
-    );
-
-    if (typeof callback == "function") {
-      callback();
-    } else {
-      this.updateHistory({
-        value: this.area.value,
-        selectionStart: before.length + open.length,
-        selectionEnd: before.length + open.length + selections.length
-      });
-    }
-  }
-
-	/**
-	 * Indent selected text inside a textarea with something
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.indent('\t');
-	 * </code>
-	 *
-	 */
-  indent(chars, callback) {
-    let sel = this.selection();
-    if (sel.value.length > 0) {
-      // Multi line
-      this.replace(/(^|\n)([^\n])/gm, "$1" + chars + "$2", callback);
-    } else {
-      // Single line
-
-      this.area.value = sel.before + chars + sel.value + sel.after;
-      this.select(sel.start + chars.length, sel.start + chars.length);
-
-      if (typeof callback == "function") {
-        callback();
-      } else {
-        this.updateHistory({
-          value: this.area.value,
-          selectionStart: sel.start + chars.length,
-          selectionEnd: sel.start + chars.length
-        });
-      }
-    }
-  }
-
-	/**
-	 * Outdent selected text inside a textarea from something
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.outdent('\t');
-	 * </code>
-	 *
-	 */
-  outdent(chars, callback) {
-    let sel = this.selection();
-
-    if (sel.value.length > 0) {
-      // Multi line
-      this.replace(new RegExp("(^|\n)" + chars, "gm"), "$1", callback);
-    } else {
-      // Single line
-
-      let before = sel.before.replace(new RegExp(chars + "$"), "");
-      this.area.value = before + sel.value + sel.after;
-      this.select(before.length, before.length);
-
-      if (typeof callback == "function") {
-        callback();
-      } else {
-        this.updateHistory({
-          value: this.area.value,
-          selectionStart: before.length,
-          selectionEnd: before.length
-        });
-      }
-    }
-  }
-
-	/**
-	 * Call available history data
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   alert(editor.callHistory(2).value);
-	 *   alert(editor.callHistory(2).selectionStart);
-	 *   alert(editor.callHistory(2).selectionEnd);
-	 * </code>
-	 *
-	 */
-  callHistory(index) {
-    return typeof index == "number" ? this.history[index] : this.history;
-  }
-
-	/**
-	 * Update history data
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.area.onkeydown = function() {
-	 *       editor.updateHistory();
-	 *   };
-	 * </code>
-	 *
-	 */
-  updateHistory(data, index) {
-    let value =
-      typeof data != "undefined"
-        ? data
-        : {
-          value: this.area.value,
-          selectionStart: this.selection().start,
-          selectionEnd: this.selection().end
-        };
-
-    this.history[typeof index == "number" ? index : this.undo] = value;
-    this.undo++;
-  }
-
-	/**
-	 * Undo from previous action or previous Redo
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.undo();
-	 * </code>
-	 *
-	 */
-  undo(callback) {
-    let data;
-    if (this.history.length > 1) {
-      if (this.undo > 1) {
-        this.undo--;
-      } else {
-        this.undo = 1;
-      }
-      data = this.callHistory(this.undo - 1);
-      this.redo = this.undo <= 0 ? this.undo - 1 : this.undo;
-    } else {
-      return;
-    }
-    this.area.value = data.value;
-    this.select(data.selectionStart, data.selectionEnd);
-    if (typeof callback == "function") callback();
-  }
-
-	/**
-	 * Redo from previous Undo
-	 *
-	 * <code>
-	 *   var editor = new Editor(elem);
-	 *   editor.redo();
-	 * </code>
-	 *
-	 */
-
-  redo(callback) {
-    let data;
-    if (this.redo !== null) {
-      data = this.callHistory(this.redo);
-      if (this.redo < this.history.length - 1) {
-        this.redo++;
-      } else {
-        this.redo = this.history.length - 1;
-      }
-      this.undo = this.redo >= history.length - 1 ? this.redo + 1 : this.redo;
-    } else {
-      return;
-    }
-    this.area.value = data.value;
-    this.select(data.selectionStart, data.selectionEnd);
-    // console.log(redo);
-    if (typeof callback == "function") callback();
+function check_tab(element, event) {
+  let code = element.value;
+  if(event.key == "Tab") {
+    /* Tab key pressed */
+    event.preventDefault(); // stop normal
+    let before_tab = code.slice(0, element.selectionStart); // text before tab
+    let after_tab = code.slice(element.selectionEnd, element.value.length); // text after tab
+    let cursor_pos = element.selectionEnd + 1; // where cursor moves after tab - moving forward by 1 char to after tab
+    element.value = before_tab + "\t" + after_tab; // add tab char
+    // move cursor
+    element.selectionStart = cursor_pos;
+    element.selectionEnd = cursor_pos;
+    update(element.value); // Update text to include indent
   }
 }
 
-// short querySelector
-const _ = (el) => document.querySelector(el);
-// init editor
-const editor = new Editor(_("#editorTextarea"));
-editor.area.onkeydown = (evt) => {
-  // Press `Shift + Enter` to add a line break
-  if (evt.shiftKey && evt.keyCode == 13) {
-    //editor.insert("<br>\n");
-		//idk what to do here
-    return false;
-  }
-  // Press `Ctrl + Enter` to create a new paragraph
-  if (evt.ctrlKey && evt.keyCode == 13) {
-    // Do the run here
-    return false;
-  }
-  // Press `Shift + Tab` to outdent
-  if (evt.shiftKey && evt.keyCode == 9) {
-    editor.outdent("\t");
-    return false;
-  }
-  // Press `Tab` to indent
-  if (evt.keyCode == 9) {
-    editor.indent("\t");
-    return false;
-  }
-};
-
-editor.area.onkeyup = (evt) => {
-	if((evt.shiftKey ||evt.keyCode == 13 || evt.keyCode == 13 || evt.keyCode == 9 || evt.keyCode == 9)
-
-	_('#editor').innerHTML = escapeHTML(editor.area.value);
+const syntax = {
+  keyword: [
+    "say",
+    "read",
+    "set",
+    "as",
+    "to"
+  ]
 }
 
+function highlight(element){
 
+  let html = element.innerHTML.split('"');
+  let syntaxKeys = Object.keys(syntax);
 
-function escapeHTML(unsafe){
-  return unsafe
-    .replace(new RegExp('&', 'g'), "&amp;")
-    .replace(new RegExp('<', 'g'), "&lt;")
-    .replace(new RegExp('>', 'g'), "&gt;")
-    .replace(new RegExp('"', 'g'), "&quot;")
-    .replace(new RegExp('\'', 'g'), "&#039;");
- }
-
-
-/**
- *  ========================================================
- *      Demo
- *  ========================================================
- */
-/*
-// sleep(ms).then(() => console.log('hi'))
-const sleep = (milliseconds) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
-// create tag
-// create([object],[parent],{arguments})
-const create = (element, where, args) => {
-  let d = document.createElement(element);
-  if (args) for (const [k, v] of Object.entries(args)) d[k] = v;
-  where.appendChild(d);
-  return d;
-};
-
-editor.insert("Hello World\n");
-sleep(1000).then(() => editor.insert("How do you do\n"));
-sleep(1500).then(() => editor.select(0, _("#editor").value.length));
-sleep(2000).then(() => editor.insert("This is a editor text\n"));
-sleep(3000).then(() => editor.insert("you can create custom editor\n"));
-sleep(4000).then(() => editor.wrap("<main>\n", "</main>\n"));
-sleep(5000).then(() => editor.insert("<h3>Width tags</h3>\n"));
-sleep(6000).then(() => editor.wrap("<p>", "</p>\n"));
-sleep(6500).then(() => editor.indent("\t"));
-sleep(7000).then(() => editor.indent("\t"));
-sleep(7500).then(() => editor.insert("indent code\n"));
-sleep(8000).then(() => editor.insert("Select all\n"));
-sleep(9000).then(() => editor.select(0, _("#editor").value.length));
-sleep(10000).then(() => editor.insert("or select something\n"));
-sleep(11000).then(() => editor.select(0, 9));
-sleep(12000).then(() => editor.insert(""));
-sleep(13000).then(() => editor.insert("or search "));
-sleep(13500).then(() => editor.select(0, _("#editor").value.length));
-sleep(14000).then(() => editor.insert("also you can create buttons"));
-sleep(15000).then(() => {
-  create("button", _(".app"), {
-    textContent: "Click me :)",
-    onclick: function () {
-      editor.select(0, _("#editor").value.length);
-      editor.wrap("<p>", "<p>\n");
-      editor.insert("Voila!");
-      sleep(1000).then(() => editor.select(0, _("#editor").value.length));
-      sleep(1500).then(() => editor.insert(""));
-      sleep(2000).then(() => editor.insert("Now, create your app :)"));
-      sleep(2500).then(() => _(".app").removeChild(this));
+  for(let i in html){
+    if(i % 2 == 0){ // Means it's not a string
+      for(let type of syntaxKeys){
+        for(let string of syntax[type]){
+          html[i] = html[i].replace(new RegExp(`&nbsp;${string}&nbsp;`, 'gm'), `&nbsp;<span class="${type}">${string}</span>&nbsp;`).replace(new RegExp(`^${string}&nbsp;`, 'gm'), `<span class="${type}">${string}</span>&nbsp;`).replace(new RegExp(`&nbsp;${string}$`, 'gm'), `&nbsp;<span class="${type}">${string}</span>`).replace(new RegExp(`^${string}$`, 'gm'), `<span class="${type}">${string}</span>`).replace(new RegExp(`\t${string}\t`, 'gm'), `\t<span class="${type}">${string}</span>\t`).replace(new RegExp(`^${string}\t`, 'gm'), `<span class="${type}">${string}</span>\t`).replace(new RegExp(`\t${string}$`, 'gm'), `\t<span class="${type}">${string}</span>`);
+        }
+      }
+    } else { // Means it is a string
+      // 
     }
-  });
-});
-sleep(15500).then(() => editor.select(0, _("#editor").value.length));
-sleep(16000).then(() => editor.insert(""));
-sleep(16500).then(() => editor.insert("Now you can click on button"));
-*/
+  }
+  element.innerHTML = html.join('"');
+
+  // while(new RegExp('(?<!<span class="string">)(?<!<span class=)(?<!<span class="string)"(?!<\/span>)', 'g').test(element.innerHTML)){
+  //   element.innerHTML = element.innerHTML.replace(new RegExp('(?<!<span class="string">)(?<!<span class=)(?<!<span class="string)"(?!<\/span>)'), '<span class="string">"');
+  //   element.innerHTML = element.innerHTML.replace(new RegExp('(?<!<span class="string">)(?<!<span class=)(?<!<span class="string)"(?!<\/span>)'), '"</span>');
+  // }
+  // let syntaxKeys = Object.keys(syntax);
+  // for(let type of syntaxKeys){
+  //   for(let string of syntax[type]){
+  //     element.innerHTML = element.innerHTML.replace(new RegExp(`&nbsp;<span class="string">[^<]*<\/span>|(${string})&nbsp;`, 'gm')[1], `&nbsp;<span class="${type}">${string}</span>&nbsp;`).replace(new RegExp(`^${string}&nbsp;`, 'gm'), `<span class="${type}">${string}</span>&nbsp;`).replace(new RegExp(`&nbsp;${string}$`, 'gm'), `&nbsp;<span class="${type}">${string}</span>`).replace(new RegExp(`^${string}$`, 'gm'), `<span class="${type}">${string}</span>`).replace(new RegExp(`\t${string}\t`, 'gm'), `\t<span class="${type}">${string}</span>\t`).replace(new RegExp(`^${string}\t`, 'gm'), `<span class="${type}">${string}</span>\t`).replace(new RegExp(`\t${string}$`, 'gm'), `\t<span class="${type}">${string}</span>`);
+  //   }
+  // }
+}
