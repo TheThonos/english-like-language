@@ -51,7 +51,6 @@ const syntax = {
 
 function highlight(element){
 	let html = element.innerHTML.split('"');
-	let oldHtml = element.innerHTML.split('"');
 	let syntaxKeys = Object.keys(syntax);
 	for(let i in html){
 		if(i % 2 == 0){ // Means it's not a string
