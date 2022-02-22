@@ -1,29 +1,9 @@
-const syntax = {
-	keyword: [
-		"say",
-		"read",
-		"set",
-		"as",
-		"to",
-		"for",
-		"if",
-		"define",
-		"with",
-		"output"
-	]
-}
-
 function run(code){
-	let lines = code.split("\n");
-	for(let line of lines){
-		let placeholder = line.split('"');
-		for(let i in placeholder){
-			if(i % 2 == 0){
-				for(let type of syntaxKeys){
-					for(let string of syntax[type]){
-						// 
-					}
-				}
+	code = code.split('"');
+	for(let i in code){
+		if(i % 2 == 0){
+			if(code[i].match(new RegExp('(^| |\t)define(?= )', 'm'))){
+				alert("Nice function!");
 			}
 		}
 	}

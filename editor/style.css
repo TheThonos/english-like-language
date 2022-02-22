@@ -68,6 +68,30 @@ body {
 	resize: none;
 }
 
+#run {
+	position: absolute;
+	top: calc(50% - 25px);
+	height: 50px;
+	left: 0;
+	width: 100%;
+	color: white;
+	background-color: #0f9f0f;
+	border: none;
+	outline: none;
+	padding: 10px;
+	cursor: pointer;
+	font-size: 25px;
+}
+
+#console {
+	position: absolute;
+	top: calc(50% + 25px);
+	width: 100%;
+	height: calc(50% - 25px);
+	left: 0;
+	background-color: #1c2333;
+}
+
 /* Paragraphs; First Image */
 * {
 	font-family: "Fira Code", monospace;
