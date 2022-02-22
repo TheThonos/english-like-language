@@ -19,10 +19,10 @@ function getInput(e, self, result){
 }
 
 function escapeHTML(unsafe){
-  return unsafe
-    .replace(new RegExp('&', 'g'), "&amp;")
-    .replace(new RegExp('<', 'g'), "&lt;")
-    .replace(new RegExp('>', 'g'), "&gt;")
-    .replace(new RegExp('"', 'g'), "&quot;")
-    .replace(new RegExp('\'', 'g'), "&#039;");
+	return unsafe
+		.replace(new RegExp('&', 'g'), "&amp;")
+		.replace(new RegExp('<', 'g'), "&lt;")
+		.replace(new RegExp('>', 'g'), "&gt;")
+		.replace(new RegExp('"', 'g'), "&quot;")
+		.replace(new RegExp('\'', 'g'), "&#039;");
  }
