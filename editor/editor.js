@@ -40,18 +40,18 @@ const syntax = {
     "read",
     "set",
     "as",
-    "to"
-  ],
-  declaration: [
+    "to",
     "for",
     "if",
-    "function",
-    "with"
+    "define",
+    "with",
+    "output"
   ]
 }
 
 function highlight(element){
   let html = element.innerHTML.split('"');
+  let oldHtml = element.innerHTML.split('"');
   let syntaxKeys = Object.keys(syntax);
   for(let i in html){
     if(i % 2 == 0){ // Means it's not a string
@@ -64,35 +64,9 @@ function highlight(element){
       html[i] = `<span class='string'>${html[i]}</span>`.replace(new RegExp(`{[a-zA-Z0-9]*}`), match => {
 				return `<span class='variable'>${match}</span>`;
 			});
-			// let vars = html[i].replace(new RegExp(`{[^}]*}|([a-zA-Z0-9]*)`, 'g'), (match, p1, p2) => {
-			// 	if(p2 != null) return match;
-			// });
     }
   }
   html = html.join('"');
-	element.innerHTML = html.replace(new RegExp(`(?<!<span class='string'>)"(?!<\/span>)`, 'g'), `<span class='string'>"</span>`);
-	/*while(new RegExp(`(?<!<span class='string'>)"(?!<\/span>)`, 'g').test(element.innerHTML)){
-		console.log("in the loop");
-    element.innerHTML = element.innerHTML.replace(new RegExp(`(?<!<span class='string'>)"(?!<\/span>)`), `<span class='string'>"</span>`);
-    //element.innerHTML = element.innerHTML.replace(new RegExp(`(?<!<span class='string'>)"(?!<\/span>)`), `<span class='string'>"</span>`);
-  	break;
-	}*/
-
-  // while(new RegExp('(?<!<span class="string">)(?<!<span class=)(?<!<span class="string)"(?!<\/span>)', 'g').test(element.innerHTML)){
-  //   element.innerHTML = element.innerHTML.replace(new RegExp('(?<!<span class="string">)(?<!<span class=)(?<!<span class="string)"(?!<\/span>)'), '<span class="string">"');
-  //   element.innerHTML = element.innerHTML.replace(new RegExp('(?<!<span class="string">)(?<!<span class=)(?<!<span class="string)"(?!<\/span>)'), '"</span>');
-  // }
-  // let syntaxKeys = Object.keys(syntax);
-  // for(let type of syntaxKeys){
-  //   for(let string of syntax[type]){
-  //     element.innerHTML = element.innerHTML.replace(new RegExp(`&nbsp;<span class="string">[^<]*<\/span>|(${string})&nbsp;`, 'gm')[1], `&nbsp;<span class='${type}'>${string}</span>&nbsp;`).replace(new RegExp(`^${string}&nbsp;`, 'gm'), `<span class='${type}'>${string}</span>&nbsp;`).replace(new RegExp(`&nbsp;${string}$`, 'gm'), `&nbsp;<span class='${type}'>${string}</span>`).replace(new RegExp(`^${string}$`, 'gm'), `<span class='${type}'>${string}</span>`).replace(new RegExp(`\t${string}\t`, 'gm'), `\t<span class='${type}'>${string}</span>\t`).replace(new RegExp(`^${string}\t`, 'gm'), `<span class='${type}'>${string}</span>\t`).replace(new RegExp(`\t${string}$`, 'gm'), `\t<span class='${type}'>${string}</span>`);
-  //   }
-  // }
+  element.innerHTML = html;
+	element.innerHTML = html.replace(new RegExp(`"(?!<\/span>)`, 'g'), `<span class='string'>"</span>`);
 }
-
-//https://www.javascripttutorial.net/javascript-regex/replace/
-
-/*
-read "What's your name?" as name
-say "Hello, {name}!"
-*/

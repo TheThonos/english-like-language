@@ -1,5 +1,9 @@
 /* Please see the article */
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
 }
@@ -11,6 +15,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   border: 0;
+  width: 100%;
   height: calc(50% - 25px);
 }
 #editing, #highlighting, #highlighting * {
@@ -27,7 +32,6 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
 }
 
 
@@ -40,6 +44,7 @@ body {
 #highlighting {
   z-index: 0;
   background: #1c2333;
+  white-space: pre;
 }
 
 
@@ -53,9 +58,9 @@ body {
 
 /* Can be scrolled */
 #editing, #highlighting {
-  overflow: scroll;
+  overflow: auto;
   white-space: nowrap; /* Allows textarea to scroll horizontally */
-  word-wrap: break-word;
+  /* overflow-wrap: break-word; */
 }
 
 /* No resize on textarea */
