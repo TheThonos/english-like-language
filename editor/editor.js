@@ -31,7 +31,7 @@ function check_tab(element, event) {
 		element.selectionStart = cursor_pos;
 		element.selectionEnd = cursor_pos;
 		update(element.value); // Update text to include indent
-	} else if(new RegExp("mac", "i").test(navigator.platform) ? event.metaKey : event.ctrlKey && event.key == "Enter"){
+	} else if((event.metaKey || event.ctrlKey) && event.key == "Enter"){
 		run(code);
 	}
 }
